@@ -14,8 +14,8 @@ jobs:
     steps:
       - name: Configure workspace
         run: |
-          mkdir -p /.ssh
-          mkdir -p /repo
+          mkdir -p ~/.ssh
+          mkdir -p ~/repo
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -24,17 +24,17 @@ jobs:
 
       - name: Configure SSH keys
         run: |
-          echo -e "${{ secrets.SSH_KEY }}" > /.ssh/private.key
-          chmod 600 /.ssh/private.key
+          echo -e "${{ secrets.SSH_KEY }}" > ../.ssh/private.key
+          chmod 600 ../.ssh/private.key
           eval "$(ssh-agent -s)"
-          ssh-add /.ssh/private.key
-          ssh-keyscan ${{ secrets.SSH_HOST }} >> /.ssh/known_hosts
+          ssh-add ../.ssh/private.key
+          ssh-keyscan ${{ secrets.SSH_HOST }} >> ../.ssh/known_hosts
 
       - name: Deploy over rsync
-        run: rsync -a -e "ssh -i /.ssh/private.key" /repo/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIRECTORY }}
+        run: rsync -a -e "ssh -i ../.ssh/private.key" ../repo/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIRECTORY }}
 
       - name: Compose up over SSH
-        run: ssh -i /.ssh/private.key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cd ${{ secrets.DEPLOY_DIRECTORY }}; docker compose up -d'
+        run: ssh -i ../.ssh/private.key ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cd ${{ secrets.DEPLOY_DIRECTORY }}; docker compose up -d'
 
       - name: SSH cleanup
-        run: rm -rf ~/.ssh
+        run: rm -rf ../.ssh
