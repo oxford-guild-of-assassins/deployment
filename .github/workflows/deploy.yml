@@ -19,9 +19,10 @@ jobs:
 
       - name: Configure SSH keys
         run: |
-          eval "$(ssh-agent -s)"
+          mkdir -p ~/.ssh
           echo -e "${{ secrets.SSH_KEY }}" > ~/.ssh/private.key
           chmod 600 ~/.ssh/private.key
+          eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/private.key
 
       - name: Deploy over rsync
