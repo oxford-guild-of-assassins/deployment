@@ -20,7 +20,7 @@ jobs:
       - name: Configure SSH keys
         run: |
           eval "$(ssh-agent -s)"
-          echo -e "${{ secrets.SSH_KEY }}"" > ~/.ssh/private.key
+          echo -e "${{ secrets.SSH_KEY }}" > ~/.ssh/private.key
           chmod 600 ~/.ssh/private.key
           ssh-add ~/.ssh/private.key
 
