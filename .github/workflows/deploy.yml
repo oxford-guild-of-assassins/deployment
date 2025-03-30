@@ -27,7 +27,7 @@ jobs:
           ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy over rsync
-        run: rsync -a ~/repo/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIRECTORY }}
+        run: rsync -a -e "ssh -i ~/.ssh/private.key" ~/repo/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_DIRECTORY }}
 
       - name: Compose up over SSH
         run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'cd ${{ secrets.DEPLOY_DIRECTORY }}; docker compose up -d'
